@@ -401,6 +401,17 @@ function do_libftdi()
   fi
 }
 
+function do_libyaml()
+{
+  cp -R ${WORK_FOLDER_PATH}/yaml/install-yaml/* ${INSTALL_FOLDER_PATH}
+
+
+  sed -i "s+/tmp/install-yaml+${INSTALL_FOLDER_PATH}+g" ${INSTALL_FOLDER_PATH}/lib/pkgconfig/yaml-0.1.pc
+  sed -i "s+/tmp/install-yaml/lib+${INSTALL_FOLDER_PATH}/lib+g" ${INSTALL_FOLDER_PATH}/lib/libyaml.la
+
+}
+
+
 function do_libiconv()
 {
   # https://www.gnu.org/software/libiconv/

@@ -311,7 +311,7 @@ then
   OPENOCD_GIT_BRANCH=${OPENOCD_GIT_BRANCH:-"gnu-mcu-eclipse-dev"}
   OPENOCD_GIT_COMMIT=${OPENOCD_GIT_COMMIT:-"d653938f45a5f040f771852f02128c4bcf8959ff"}
   
-  BUILD_GIT_PATH="${WORK_FOLDER_PATH}"/build.git
+  BUILD_GIT_PATH="${WORK_FOLDER_PATH}"/build.git/home/blofeld/development/openocd-build/scripts/container-openocd-functions-source.sh
 
   # ---------------------------------------------------------------------------
 
@@ -346,6 +346,55 @@ then
   HIDAPI_VERSION="0.8.0-rc1"
 
   # ---------------------------------------------------------------------------
+elif [[ "${RELEASE_VERSION}" =~ 0\.10\.0-15 ]]
+then
+
+  # ---------------------------------------------------------------------------
+  # LICHEE TANG
+
+  OPENOCD_VERSION="0.10.0-15"
+
+  OPENOCD_GIT_BRANCH=${OPENOCD_GIT_BRANCH:-"riscv"}
+  OPENOCD_GIT_COMMIT=${OPENOCD_GIT_COMMIT:-"d01b1cdf1e1dedf15bcaffe8a29678e1a398ab6c"}
+  
+  BUILD_GIT_PATH="${WORK_FOLDER_PATH}"/build.git
+
+  # ---------------------------------------------------------------------------
+
+  LIBUSB1_VERSION="1.0.20"
+  LIBUSB0_VERSION="0.1.5"
+  LIBUSB_W32_VERSION="1.2.6.0"
+  LIBFTDI_VERSION="1.2"
+  LIBICONV_VERSION="1.15"
+  HIDAPI_VERSION="0.8.0-rc1"
+
+  # ---------------------------------------------------------------------------
+elif [[ "${RELEASE_VERSION}" =~ 0\.10\.0-16 ]]
+then
+
+  # ---------------------------------------------------------------------------
+  # LICHEE TANG
+
+  OPENOCD_VERSION="0.10.0-16"
+
+  OPENOCD_GIT_BRANCH=${OPENOCD_GIT_BRANCH:-"riscv_spinal"}
+  OPENOCD_GIT_COMMIT=${OPENOCD_GIT_COMMIT:-"74f55a073e228d94af45b76a78ac8c7d9d279735"}
+  
+  BUILD_GIT_PATH="${WORK_FOLDER_PATH}"/build.git
+
+  # ---------------------------------------------------------------------------
+
+  LIBUSB1_VERSION="1.0.20"
+  LIBUSB0_VERSION="0.1.5"
+  LIBUSB_W32_VERSION="1.2.6.0"
+  LIBFTDI_VERSION="1.2"
+  LIBICONV_VERSION="1.15"
+  HIDAPI_VERSION="0.8.0-rc1"
+
+
+
+
+  # ---------------------------------------------------------------------------
 elif [[ "${RELEASE_VERSION}" =~ 0\.10\.0-11 ]]
 then
 
@@ -376,9 +425,16 @@ fi
 
 # -----------------------------------------------------------------------------
 
+if [[ "${RELEASE_VERSION}" =~ 0\.10\.0-15 ]]
+then
+  OPENOCD_GIT_URL=${OPENOCD_GIT_URL:-"https://github.com/kaidoho/riscv-openocd.git"}
+elif [[ "${RELEASE_VERSION}" =~ 0\.10\.0-16 ]]
+then
+  OPENOCD_GIT_URL=${OPENOCD_GIT_URL:-"https://github.com/kaidoho/openocd_riscv.git"}
+else
+  OPENOCD_GIT_URL=${OPENOCD_GIT_URL:-"https://github.com/gnu-mcu-eclipse/openocd.git"}
+fi
 OPENOCD_SRC_FOLDER_NAME=${OPENOCD_SRC_FOLDER_NAME:-"${OPENOCD_PROJECT_NAME}.git"}
-OPENOCD_GIT_URL=${OPENOCD_GIT_URL:-"https://github.com/gnu-mcu-eclipse/openocd.git"}
-
 OPENOCD_FOLDER_NAME="openocd-${OPENOCD_VERSION}"
 
 # -----------------------------------------------------------------------------
@@ -404,6 +460,10 @@ do_libiconv
 
 do_hidapi
 
+if [[ "${RELEASE_VERSION}" =~ 0\.10\.0-16 ]]
+then
+do_libyaml
+fi
 # -----------------------------------------------------------------------------
 
 do_openocd

@@ -64,6 +64,7 @@ function do_openocd()
         export CXXFLAGS="${EXTRA_CXXFLAGS}" 
         export LDFLAGS="${EXTRA_LDFLAGS} -static"
 
+
         AMTJTAGACCEL="--enable-amtjtagaccel"
         # --enable-buspirate -> not supported on mingw
         BUSPIRATE="--disable-buspirate"

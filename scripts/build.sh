@@ -128,6 +128,12 @@ then
   echo ${rest[@]-}
 fi
 
+
+
+
+
+
+
 # -----------------------------------------------------------------------------
 # Identify helper scripts.
 
@@ -163,6 +169,7 @@ host_functions_script_path="${script_folder_path}/helper/host-functions-source.s
 echo "Host helper functions source script: \"${host_functions_script_path}\"."
 source "${host_functions_script_path}"
 
+
 # Copy the build files to the Work area, to make them available for the 
 # container script.
 rm -rf "${HOST_WORK_FOLDER_PATH}"/build.git
@@ -170,6 +177,43 @@ mkdir -p "${HOST_WORK_FOLDER_PATH}"/build.git
 cp -r "$(dirname ${script_folder_path})"/* "${HOST_WORK_FOLDER_PATH}"/build.git
 rm -rf "${HOST_WORK_FOLDER_PATH}"/build.git/scripts/helper/.git
 rm -rf "${HOST_WORK_FOLDER_PATH}"/build.git/scripts/helper/build-helper.sh
+
+if [[ "${RELEASE_VERSION}" =~ 0\.10\.0-16 ]]
+then
+#build libyaml in advance on host
+LIBYAML_TMP_BUILD_FOLDER=/tmp/build-yaml
+LIBYAML_TMP_INSTALL_FOLDER=/tmp/install-yaml
+
+if [ -d "$LIBYAML_TMP_BUILD_FOLDER" ]; then
+rm -rf $LIBYAML_TMP_BUILD_FOLDER
+fi
+if [ -d "$LIBYAML_TMP_INSTALL_FOLDER" ]; then
+rm -rf $LIBYAML_TMP_INSTALL_FOLDER
+fi 
+
+mkdir -p $LIBYAML_TMP_BUILD_FOLDER
+
+git clone https://github.com/yaml/libyaml.git ${LIBYAML_TMP_BUILD_FOLDER}
+cd ${LIBYAML_TMP_BUILD_FOLDER}
+git checkout 690a781ef6af70ce6749d6e2be91743345123998
+bash "${LIBYAML_TMP_BUILD_FOLDER}/bootstrap" 
+	  
+bash "${LIBYAML_TMP_BUILD_FOLDER}/configure" --prefix="${LIBYAML_TMP_INSTALL_FOLDER}" --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --disable-shared
+make 
+make install
+
+mkdir -p "${HOST_WORK_FOLDER_PATH}/yaml"
+cp -R $LIBYAML_TMP_INSTALL_FOLDER ${HOST_WORK_FOLDER_PATH}/yaml
+
+if [ -d "$LIBYAML_TMP_BUILD_FOLDER" ]; then
+  rm -rf $LIBYAML_TMP_BUILD_FOLDER
+fi
+if [ -d "$LIBYAML_TMP_INSTALL_FOLDER" ]; then
+  rm -rf $LIBYAML_TMP_INSTALL_FOLDER
+fi
+fi
+
+
 
 CONTAINER_BUILD_SCRIPT_REL_PATH="build.git/scripts/${CONTAINER_SCRIPT_NAME}"
 echo "Container build script: \"${HOST_WORK_FOLDER_PATH}/${CONTAINER_BUILD_SCRIPT_REL_PATH}\"."
